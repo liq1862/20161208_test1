@@ -1,5 +1,6 @@
 package com.example.user.a20161208_test1;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -33,18 +34,24 @@ public class MainActivity extends AppCompatActivity {
     public void clickAdd(View v)
     {
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_FILE, null);
-        String SName = ed1.getText().toString();
-        String tel = ed2.getText().toString();
-        String addr = ed3.getText().toString();
-        String sql = "insert into phone (SName, tel, addr) values ('" + SName + "','" + tel + "','" + addr + "')";
-        db.execSQL(sql);
+        String strSName = ed1.getText().toString();
+        String strTel = ed2.getText().toString();
+        String strAddr = ed3.getText().toString();
+        // String sql = String.format("insert into phone (SName, tel, addr) values ('%s','%s','%s')", strSName, strTel, strAddr);
+        // Log.d("DB_SQL", sql);
+        // db.execSQL(sql);
+        ContentValues cv = new ContentValues();
+        cv.put("SName", strSName);
+        cv.put("tel", strTel);
+        cv.put("addr", strAddr);
+        db.insert("phone", null, cv);
         db.close();
     }
 
     public void clickList(View v)
     {
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_FILE, null);
-        Cursor c = db.rawQuery("Select * from phone", null);
+        Cursor c = db.query("phone", new String[] {"ID", "SName"}, null,null,null,null,null);
         if (c.moveToFirst())
         {
             Log.d("DB", c.getString(1));
